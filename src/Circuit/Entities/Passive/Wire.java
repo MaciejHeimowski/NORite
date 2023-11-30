@@ -1,5 +1,7 @@
-package Circuit.Passive;
+package Circuit.Entities.Passive;
 
+import Circuit.Node;
+import Utils.Port;
 import Utils.Coords;
 
 import static java.lang.Math.max;
@@ -12,7 +14,6 @@ public class Wire extends PassiveEntity {
         this.bend = bend;
     }
 
-
     public enum Bend {
         HorizontalStart,
         VerticalStart
@@ -21,7 +22,19 @@ public class Wire extends PassiveEntity {
     private Coords start, end;
     private Bend bend;
 
-    public boolean goesThrough(Coords point) {
+    private Port[] ports;
+
+    private Node nodeHandle;
+
+    public void setNodeHandle(Node nodeHandle) {
+        this.nodeHandle = nodeHandle;
+    }
+
+    public Node getNodeHandle() {
+        return this.nodeHandle;
+    }
+    @Override
+    public boolean occupies(Coords point) {
         return switch(this.bend) {
             case HorizontalStart ->
                 (point.y() == this.start.y()
@@ -41,6 +54,18 @@ public class Wire extends PassiveEntity {
                 && min(this.start.x(), this.end.x()) < point.x()
                 && point.x() < max(this.start.x(), this.end.x()));
         };
+    }
+
+    @Override
+    public void setCoords(Coords coords) {
+        Coords diff = new Coords(coords.x() - this.coords.x(), coords.y() - this.coords.y());
+        this.start.add(diff);
+        this.end.add(diff);
+    }
+
+    @Override
+    public Port[] getPorts() {
+        return null;
     }
 
     @Override

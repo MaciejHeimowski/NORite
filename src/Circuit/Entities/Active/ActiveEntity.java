@@ -1,6 +1,6 @@
-package Circuit.Active;
+package Circuit.Entities.Active;
 
-import Circuit.Entity;
+import Circuit.Entities.Entity;
 
 public abstract class ActiveEntity extends Entity {
     protected boolean outputState;

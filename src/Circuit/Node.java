@@ -1,6 +1,6 @@
-package Circuit.Netlist;
+package Circuit;
 
-import Circuit.Active.ActiveEntity;
+import Circuit.Entities.Active.ActiveEntity;
 
 public class Node {
     private ActiveEntity driverHandle;
