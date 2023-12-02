@@ -1,8 +1,10 @@
+package UI;
+
 import java.awt.*;
 
-public class MenuBar extends UIPanel {
-    public MenuBar() {
-        super(0, 0, 1024, 32);
+public class Editor extends UIPanel {
+    public Editor() {
+        super(0, 32, 896, 736);
     }
 
     @Override
@@ -16,6 +18,7 @@ public class MenuBar extends UIPanel {
 
     private void paintBase(Graphics2D g2) {
         g2.setColor(Color.WHITE);
-        g2.fillRect(0,30, 1024, 2);
+        g2.fillRect(0,0, 1024, 2);
+        g2.fillRect(894,0, 2, 736);
     }
 }

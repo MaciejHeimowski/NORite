@@ -1,8 +1,10 @@
+package UI;
+
 import java.awt.*;
 
-public class Editor extends UIPanel {
-    public Editor() {
-        super(0, 32, 896, 736);
+public class ToolBar extends UIPanel {
+    public ToolBar() {
+        super(896, 32, 128, 736);
     }
 
     @Override
@@ -16,7 +18,7 @@ public class Editor extends UIPanel {
 
     private void paintBase(Graphics2D g2) {
         g2.setColor(Color.WHITE);
-        g2.fillRect(0,0, 1024, 2);
-        g2.fillRect(894,0, 2, 736);
+        g2.fillRect(0,0, 128, 2);
+        g2.fillRect(0,0, 2, 736);
     }
 }

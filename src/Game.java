@@ -1,3 +1,7 @@
+import UI.Editor;
+import UI.MenuBar;
+import UI.ToolBar;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -7,7 +11,7 @@ public class Game extends JFrame {
     private static int width = 1024, height = 768;
 
     // References to all UI components
-    private static MenuBar menuBar;
+    private static UI.MenuBar menuBar;
     private static Editor editor;
     private static ToolBar toolBar;
 
