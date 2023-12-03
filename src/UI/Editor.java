@@ -4,21 +4,22 @@ import java.awt.*;
 
 public class Editor extends UIPanel {
     public Editor() {
-        super(0, 32, 896, 736);
+        super(0, horizBarY, vertBarX, gameHeight - horizBarY);
     }
 
     @Override
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(2 * barThickness));
 
-        super.paint(g);
+        super.paint(g2);
 
-        paintBase(g2);
+        this.paintBase(g2);
     }
 
     private void paintBase(Graphics2D g2) {
         g2.setColor(Color.WHITE);
-        g2.fillRect(0,0, 1024, 2);
-        g2.fillRect(894,0, 2, 736);
+        g2.fillRect(0, 0, vertBarX, barThickness);
+        g2.fillRect(vertBarX - barThickness, 0, barThickness, gameHeight - horizBarY);
     }
 }

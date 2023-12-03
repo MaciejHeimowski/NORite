@@ -4,21 +4,22 @@ import java.awt.*;
 
 public class ToolBar extends UIPanel {
     public ToolBar() {
-        super(896, 32, 128, 736);
+        super(vertBarX, horizBarY, gameWidth - vertBarX, gameHeight - horizBarY);
     }
 
     @Override
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(2 * barThickness));
 
-        super.paint(g);
+        super.paint(g2);
 
-        paintBase(g2);
+        this.paintBase(g2);
     }
 
     private void paintBase(Graphics2D g2) {
         g2.setColor(Color.WHITE);
-        g2.fillRect(0,0, 128, 2);
-        g2.fillRect(0,0, 2, 736);
+        g2.fillRect(0,0, gameWidth - vertBarX, barThickness);
+        g2.fillRect(0,0, barThickness, gameHeight - horizBarY);
     }
 }
