@@ -3,6 +3,9 @@ package UI;
 import java.awt.*;
 
 public class MenuBar extends UIPanel {
+
+    private boolean simulationStarted;
+
     public MenuBar() {
         super(0, 0, gameWidth, horizBarY);
     }
@@ -30,8 +33,6 @@ public class MenuBar extends UIPanel {
         g2.drawRect(gameWidth / 10 + (5 * barThickness),2 * barThickness, gameWidth / 10, horizBarY - (5 * barThickness));
         g2.drawRect(gameWidth / 5 + (8 * barThickness),2 * barThickness, gameWidth / 10, horizBarY - (5 * barThickness));
 
-        g2.setColor(new Color(0, 255, 168));
-
         Polygon startButton = new Polygon(
             new int[] {3 * gameWidth / 10 + (11 * barThickness),
             3 * gameWidth / 10 + (11 * barThickness) + (gameWidth / 30),
@@ -44,11 +45,30 @@ public class MenuBar extends UIPanel {
    3
         );
 
-        g2.drawPolygon(startButton);
+        if(simulationStarted) {
+            g2.setColor(new Color(0, 255, 168));
+            g2.fillPolygon(startButton);
 
-        g2.setColor(new Color(255, 32, 64));
+            g2.setColor(new Color(255, 32, 64));
+            g2.drawOval(
+                    (int)(startButton.getBounds2D().getX() + startButton.getBounds2D().getWidth() + (5 * barThickness)),
+                    3 * barThickness,
+                    horizBarY - (7 * barThickness),
+                    horizBarY - (7 * barThickness)
+            );
+        }
+        else {
+            g2.setColor(new Color(0, 255, 168));
+            g2.fillPolygon(startButton);
 
-        g2.fillOval((int)(startButton.getBounds2D().getX() + startButton.getBounds2D().getWidth() + (5 * barThickness)), 3 * barThickness, horizBarY - (7 * barThickness), horizBarY - (7 * barThickness));
+            g2.setColor(new Color(255, 32, 64));
+            g2.fillOval(
+                    (int)(startButton.getBounds2D().getX() + startButton.getBounds2D().getWidth() + (5 * barThickness)),
+                    3 * barThickness,
+                    horizBarY - (7 * barThickness),
+                    horizBarY - (7 * barThickness)
+            );
+        }
 
         g2.setColor(Color.WHITE);
     }

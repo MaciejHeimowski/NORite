@@ -3,6 +3,9 @@ package UI;
 import java.awt.*;
 
 public class Editor extends UIPanel {
+
+    private int pixelsByGridUnit;
+
     public Editor() {
         super(0, horizBarY, vertBarX, gameHeight - horizBarY);
     }
