@@ -8,8 +8,6 @@ public abstract class UIPanel extends JPanel {
     public UIPanel(int x, int y, int width, int height) {
         this.setBounds(x, y, width, height);
         this.setBackground(Color.BLACK);
-
-        System.out.println(this.getHeight());
     }
 
     public static void setParameters(int gameWidth, int gameHeight, int horizBarY, int vertBarX, int barThickness) {

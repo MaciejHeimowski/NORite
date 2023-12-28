@@ -1,5 +1,5 @@
 package Core.Elements;
 
-public abstract class Gate {
+public abstract class Gate extends Tile {
 
 }

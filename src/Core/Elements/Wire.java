@@ -2,10 +2,10 @@ package Core.Elements;
 
 import java.awt.*;
 
-public class NOR extends Gate {
+public class Wire extends Tile {
 
     @Override
     public Color getColor() {
-        return Color.RED;
+        return Color.WHITE;
     }
 }
