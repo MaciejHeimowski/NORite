@@ -1,13 +1,32 @@
 package UI;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MenuBar extends UIPanel {
 
-    private boolean simulationStarted;
+    private boolean simulationStarted = false;
 
     public MenuBar() {
         super(0, 0, gameWidth, horizBarY);
+
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if(e.getX() > 370 && e.getY() < 410) {
+                    System.out.println("STOP");
+                    simulationStarted = false;
+                }
+                else if(e.getX() > 328 && e.getY() < 363) {
+                    System.out.println("START");
+                    simulationStarted = true;
+                }
+                System.out.println(e.getX() + " " + e.getY());
+                repaint();
+            }
+        });
     }
 
     @Override
@@ -59,7 +78,7 @@ public class MenuBar extends UIPanel {
         }
         else {
             g2.setColor(new Color(0, 255, 168));
-            g2.fillPolygon(startButton);
+            g2.drawPolygon(startButton);
 
             g2.setColor(new Color(255, 32, 64));
             g2.fillOval(

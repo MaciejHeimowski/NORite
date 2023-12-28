@@ -1,3 +1,5 @@
+package Init;
+
 import UI.Editor;
 import UI.MenuBar;
 import UI.ToolBar;
