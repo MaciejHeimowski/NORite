@@ -8,9 +8,11 @@ import Core.Elements.*;
 
 public class Editor extends UIPanel {
 
-    private final int tileSize = 20;
+    private static final int tileSize = 20;
 
-    private Tile[][] map;
+    private static Tile[][] map;
+
+    private static Tile currentTile;
 
     public Editor() {
         super(0, horizBarY, vertBarX, gameHeight - horizBarY);
@@ -23,6 +25,8 @@ public class Editor extends UIPanel {
             }
         }
 
+        currentTile = new Wire();
+
         this.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -32,7 +36,20 @@ public class Editor extends UIPanel {
 
                 if(me.getButton() == MouseEvent.BUTTON1) {
                     System.out.println("Place " + tileX + " " + tileY);
-                    map[tileY][tileX] = new Wire();
+
+                    switch(currentTile) {
+                        case Wire w -> {
+                            currentTile = new Wire();
+                        }
+                        case NOR n -> {
+                            currentTile = new NOR();
+                        }
+                        default -> {
+                            currentTile = new Empty(tileX, tileY);
+                        }
+                    }
+
+                    map[tileY][tileX] = currentTile;
                 }
                 else if(me.getButton() == MouseEvent.BUTTON3) {
                     System.out.println("Erase " + tileX + " " + tileY);
@@ -43,6 +60,10 @@ public class Editor extends UIPanel {
         });
 
         repaint();
+    }
+
+    public static void setCurrentTile(Tile tile) {
+        currentTile = tile;
     }
 
     @Override
