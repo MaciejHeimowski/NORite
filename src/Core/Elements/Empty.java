@@ -3,11 +3,10 @@ package Core.Elements;
 import java.awt.*;
 
 public class Empty extends Tile {
-    static boolean even;
+    private boolean even;
 
     @Override
     public Color getColor() {
-        even = !even;
         if(even) {
             return Color.DARK_GRAY;
         }
@@ -16,7 +15,7 @@ public class Empty extends Tile {
         }
     }
 
-    public Empty() {
-
+    public Empty(int x, int y) {
+        even = (x + y) % 2 == 0;
     }
 }

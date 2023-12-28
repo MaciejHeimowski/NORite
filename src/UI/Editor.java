@@ -19,7 +19,7 @@ public class Editor extends UIPanel {
 
         for(int i = 0; i < (vertBarX - 2) / tileSize; i++) {
             for(int j = 0; j < ((gameHeight - horizBarY - 2) / tileSize) - 2; j++) {
-                map[j][i] = new Empty();
+                map[j][i] = new Empty(j, i);
             }
         }
 
@@ -27,7 +27,18 @@ public class Editor extends UIPanel {
 
             @Override
             public void mouseClicked(MouseEvent me) {
-                System.out.println(((me.getX() - 10) / tileSize) + " " + ((me.getY() - 10) / tileSize));
+                int tileX = ((me.getX() - 10) / tileSize);
+                int tileY = ((me.getY() - 10) / tileSize);
+
+                if(me.getButton() == MouseEvent.BUTTON1) {
+                    System.out.println("Place " + tileX + " " + tileY);
+                    map[tileY][tileX] = new Wire();
+                }
+                else if(me.getButton() == MouseEvent.BUTTON3) {
+                    System.out.println("Erase " + tileX + " " + tileY);
+                    map[tileY][tileX] = new Empty(tileX, tileY);
+                }
+                repaint();
             }
         });
 
