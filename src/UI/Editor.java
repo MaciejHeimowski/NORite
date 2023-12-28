@@ -1,13 +1,69 @@
 package UI;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import Core.Elements.*;
 
 public class Editor extends UIPanel {
 
-    private int pixelsByGridUnit;
+    private static final int tileSize = 20;
+
+    private static Tile[][] map;
+
+    private static Tile currentTile;
 
     public Editor() {
         super(0, horizBarY, vertBarX, gameHeight - horizBarY);
+
+        map = new Tile[((gameHeight - horizBarY - 2) / tileSize) - 2][(vertBarX - 2) / tileSize];
+
+        for(int i = 0; i < (vertBarX - 2) / tileSize; i++) {
+            for(int j = 0; j < ((gameHeight - horizBarY - 2) / tileSize) - 2; j++) {
+                map[j][i] = new Empty(j, i);
+            }
+        }
+
+        currentTile = new Wire();
+
+        this.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent me) {
+                int tileX = ((me.getX() - 10) / tileSize);
+                int tileY = ((me.getY() - 10) / tileSize);
+
+                if(me.getButton() == MouseEvent.BUTTON1) {
+                    System.out.println("Place " + tileX + " " + tileY);
+
+                    switch(currentTile) {
+                        case Wire w -> {
+                            currentTile = new Wire();
+                        }
+                        case NOR n -> {
+                            currentTile = new NOR();
+                        }
+                        default -> {
+                            currentTile = new Empty(tileX, tileY);
+                        }
+                    }
+
+                    map[tileY][tileX] = currentTile;
+                }
+                else if(me.getButton() == MouseEvent.BUTTON3) {
+                    System.out.println("Erase " + tileX + " " + tileY);
+                    map[tileY][tileX] = new Empty(tileX, tileY);
+                }
+                repaint();
+            }
+        });
+
+        repaint();
+    }
+
+    public static void setCurrentTile(Tile tile) {
+        currentTile = tile;
     }
 
     @Override
@@ -18,6 +74,13 @@ public class Editor extends UIPanel {
         super.paint(g2);
 
         this.paintBase(g2);
+
+        for(int i = 0; i < (vertBarX - 2) / tileSize; i++) {
+            for(int j = 0; j < ((gameHeight - horizBarY - 2) / tileSize) - 2; j++) {
+                g2.setColor(map[j][i].getColor());
+                g2.fillRect(10 + tileSize * i, 10 + tileSize *  j + 2, tileSize, tileSize);
+            }
+        }
     }
 
     private void paintBase(Graphics2D g2) {
