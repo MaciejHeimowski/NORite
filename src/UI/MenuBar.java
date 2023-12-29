@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent;
 
 public class MenuBar extends UIPanel {
 
-    private boolean simulationStarted = false;
+
 
     public MenuBar() {
         super(0, 0, gameWidth, horizBarY);
@@ -17,11 +17,11 @@ public class MenuBar extends UIPanel {
                 super.mouseClicked(e);
                 if(e.getX() > 370 && e.getY() < 410) {
                     System.out.println("STOP");
-                    simulationStarted = false;
+                    Editor.stopSimulation();
                 }
                 else if(e.getX() > 328 && e.getY() < 363) {
                     System.out.println("START");
-                    simulationStarted = true;
+                    Editor.startSimulation();
                 }
                 System.out.println(e.getX() + " " + e.getY());
                 repaint();
@@ -64,7 +64,7 @@ public class MenuBar extends UIPanel {
    3
         );
 
-        if(simulationStarted) {
+        if(Editor.isSimulationStarted()) {
             g2.setColor(new Color(0, 255, 168));
             g2.fillPolygon(startButton);
 
