@@ -19,7 +19,7 @@ public class Wire extends Tile {
 
     @Override
     public Color getColor() {
-        if(Editor.isSimulationStarted() && this.node.getState()) {
+        if(Editor.getStatus() != Editor.Status.Stopped && this.node.getState()) {
             return Color.GREEN;
         }
         else {

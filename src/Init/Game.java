@@ -20,6 +20,10 @@ public class Game extends JFrame {
     private static Editor editor;
     private static ToolBar toolBar;
 
+    public static void updateSimulationView() {
+        editor.updateView();
+    }
+
     public Game() {
 
         // Set up the game window properties

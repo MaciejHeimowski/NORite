@@ -17,29 +17,55 @@ public class Editor extends UIPanel {
 
     private static Tile currentTile;
 
-    private static boolean simulationStarted;
+    public enum Status {
+        Stopped,
+        Step,
+        Running
+    }
 
-    public static boolean isSimulationStarted() {
-        return simulationStarted;
+    private static Status status = Status.Stopped;
+
+    private static HashSet<Node> netlist = new HashSet<>();
+
+    public static Status getStatus() {
+        return status;
     }
 
     public static void startSimulation() {
-        simulationStarted = true;
+        if(status == Status.Stopped)
+            createNetlist();
 
-        createNetlist();
+        status = Status.Running;
     }
 
     public static void stopSimulation() {
-        simulationStarted = false;
+        status = Status.Stopped;
 
         eraseNetlist();
+    }
+
+    public static void stepSimulation() {
+        if(status == Status.Stopped)
+            createNetlist();
+
+        status = Status.Step;
+
+        tick();
+    }
+
+    public static void tick() {
+        for(Node node : netlist) {
+            node.updateState();
+        }
+    }
+
+    public void updateView() {
+        repaint();
     }
 
     public static Tile getTile(int x, int y) {
         return map[y][x];
     }
-
-    private static HashSet<Node> netlist = new HashSet<>();
 
     public Editor() {
         super(0, horizBarY, vertBarX, gameHeight - horizBarY);
@@ -58,8 +84,8 @@ public class Editor extends UIPanel {
 
             @Override
             public void mouseClicked(MouseEvent me) {
-                if(isSimulationStarted()) {
-
+                if(status != Status.Stopped) {
+                    handleInputTiles(me);
                 }
                 else {
                     handleMouseClick(me);
@@ -67,7 +93,24 @@ public class Editor extends UIPanel {
             }
         });
 
-        repaint();
+        updateView();
+    }
+
+    private void handleInputTiles(MouseEvent me) {
+        int tileX = ((me.getX() - 10) / tileSize);
+        int tileY = ((me.getY() - 10) / tileSize);
+
+        if(me.getButton() == MouseEvent.BUTTON1) {
+            System.out.println("Flip input " + tileX + " " + tileY);
+
+            Tile pressedTile = map[tileY][tileX];
+
+            if(pressedTile instanceof Input) {
+                ((Input) pressedTile).flipOutputState();
+            }
+        }
+
+        updateView();
     }
 
     private void handleMouseClick(MouseEvent me) {
@@ -84,6 +127,12 @@ public class Editor extends UIPanel {
                 case NOR n -> {
                     currentTile = new NOR(tileX, tileY);
                 }
+                case Bridge b -> {
+                    currentTile = new Bridge(tileX, tileY);
+                }
+                case Input i -> {
+                    currentTile = new Input(tileX, tileY);
+                }
                 default -> {
                     currentTile = new Empty(tileX, tileY);
                 }
@@ -95,7 +144,8 @@ public class Editor extends UIPanel {
             System.out.println("Erase " + tileX + " " + tileY);
             map[tileY][tileX] = new Empty(tileX, tileY);
         }
-        repaint();
+
+        updateView();
     }
 
     public static void createNetlist() {
@@ -151,25 +201,43 @@ public class Editor extends UIPanel {
     }
 
     private static void attachNode(int j, int i, Node newNode) {
-        Wire wire = (Wire) map[j][i];
+        if(map[j][i] instanceof Wire) {
+            Wire wire = (Wire) map[j][i];
 
-        if(wire.getNode() == null) {
-            wire.setNode(newNode);
+            if(wire.getNode() == null) {
+                wire.setNode(newNode);
 
-            System.out.println("Attached node " + newNode.getId() + " to wire at " + j + ", " + i);
+                System.out.println("Attached node " + newNode.getId() + " to wire at " + j + ", " + i);
 
-            if (map[j][i - 1] instanceof Wire) {
-                attachNode(j, i - 1, newNode);
+                if(map[j][i - 1] instanceof Wire) {
+                    attachNode(j, i - 1, newNode);
+                }
+                if(map[j][i + 1] instanceof Wire) {
+                    attachNode(j, i + 1, newNode);
+                }
+                if(map[j - 1][i] instanceof Wire) {
+                    attachNode(j - 1, i, newNode);
+                }
+                if(map[j + 1][i] instanceof Wire) {
+                    attachNode(j + 1, i, newNode);
+                }
+
+                if(map[j][i - 2] instanceof Wire && map[j][i - 1] instanceof Bridge) {
+                    attachNode(j, i - 2, newNode);
+                }
+                if(map[j][i + 2] instanceof Wire && map[j][i + 1] instanceof Bridge) {
+                    attachNode(j, i + 2, newNode);
+                }
+                if(map[j - 2][i] instanceof Wire && map[j - 1][i] instanceof Bridge) {
+                    attachNode(j - 2, i, newNode);
+                }
+                if(map[j + 2][i] instanceof Wire && map[j + 1][i] instanceof Bridge) {
+                    attachNode(j + 2, i, newNode);
+                }
             }
-            if (map[j][i + 1] instanceof Wire) {
-                attachNode(j, i + 1, newNode);
-            }
-            if(map[j - 1][i] instanceof Wire) {
-                attachNode(j - 1, i, newNode);
-            }
-            if(map[j + 1][i] instanceof Wire) {
-                attachNode(j + 1, i, newNode);
-            }
+        }
+        else {
+
         }
     }
 
