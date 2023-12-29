@@ -16,7 +16,7 @@ public class ToolBar extends UIPanel {
         JButton NORButton = new JButton("NOR");
         NORButton.setBackground(Color.BLACK);
         NORButton.setForeground(Color.WHITE);
-        NORButton.addActionListener(e -> Editor.setCurrentTile(new NOR()));
+        NORButton.addActionListener(e -> Editor.setCurrentTile(new NOR(0, 0)));
 
         JButton WireButton = new JButton("Wire");
         WireButton.setBackground(Color.BLACK);

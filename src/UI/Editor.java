@@ -35,6 +35,10 @@ public class Editor extends UIPanel {
         eraseNetlist();
     }
 
+    public static Tile getTile(int x, int y) {
+        return map[y][x];
+    }
+
     private static HashSet<Node> netlist = new HashSet<>();
 
     public Editor() {
@@ -78,7 +82,7 @@ public class Editor extends UIPanel {
                     currentTile = new Wire();
                 }
                 case NOR n -> {
-                    currentTile = new NOR();
+                    currentTile = new NOR(tileX, tileY);
                 }
                 default -> {
                     currentTile = new Empty(tileX, tileY);
@@ -97,10 +101,14 @@ public class Editor extends UIPanel {
     public static void createNetlist() {
         int nodeId = 0;
 
+        // Attach nodes to wires
+
         for(int i = 1; i < (vertBarX - 2) / tileSize - 1; i++) {
             for(int j = 1; j < ((gameHeight - horizBarY - 2) / tileSize) - 3; j++) {
                 if(map[j][i] instanceof Wire) {
-                    if(((Wire) map[j][i]).getNode() == null) {
+                    Wire wire = (Wire) map[j][i];
+
+                    if(wire.getNode() == null) {
                         Node newNode = new Node(nodeId);
                         netlist.add(newNode);
 
@@ -112,8 +120,19 @@ public class Editor extends UIPanel {
             }
         }
 
+        // Attach gate outputs and inputs to nodes
+
+        for(int i = 1; i < (vertBarX - 2) / tileSize - 1; i++) {
+            for(int j = 1; j < ((gameHeight - horizBarY - 2) / tileSize) - 3; j++) {
+                if(map[j][i] instanceof Gate) {
+                    Gate gate = (Gate) map[j][i];
+                    gate.attachConnections();
+                }
+            }
+        }
+
         for(Node node : netlist) {
-            System.out.println("Netlist now contains node " + node.getId());
+            System.out.println("Node " + node.getId() + " is driven by gates at " + node.enumerateDrivers());
         }
     }
 
