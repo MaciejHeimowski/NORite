@@ -7,6 +7,8 @@ import UI.UIPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Game extends JFrame {
 
@@ -48,5 +50,13 @@ public class Game extends JFrame {
 
         this.setLayout(null);
         this.setVisible(true);
+
+        int delay = 500; //milliseconds
+        ActionListener taskPerformer = new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                System.out.println("This will run every 500 milliseconds");
+            }
+        };
+        new javax.swing.Timer(delay, taskPerformer).start();
     }
 }
