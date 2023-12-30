@@ -51,12 +51,18 @@ public class Game extends JFrame {
         this.setLayout(null);
         this.setVisible(true);
 
-        int delay = 500; //milliseconds
+        int delayMillis = 100;
+
         ActionListener taskPerformer = new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                System.out.println("This will run every 500 milliseconds");
+                if(Editor.getStatus() == Editor.Status.Running) {
+                    Editor.tick();
+                    editor.repaint();
+                    System.out.println("test");
+                }
             }
         };
-        new javax.swing.Timer(delay, taskPerformer).start();
+
+        new javax.swing.Timer(delayMillis, taskPerformer).start();
     }
 }
