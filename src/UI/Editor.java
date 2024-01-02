@@ -124,6 +124,9 @@ public class Editor extends UIPanel {
                 case Wire w -> {
                     currentTile = new Wire();
                 }
+                case NAND n -> {
+                    currentTile = new NAND(tileX, tileY);
+                }
                 case NOR n -> {
                     currentTile = new NOR(tileX, tileY);
                 }

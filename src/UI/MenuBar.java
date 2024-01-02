@@ -59,7 +59,19 @@ public class MenuBar extends UIPanel {
 
         g2.drawRect(2 * barThickness, 2 * barThickness, gameWidth / 10, horizBarY - (5 * barThickness));
         g2.drawRect(gameWidth / 10 + (5 * barThickness),2 * barThickness, gameWidth / 10, horizBarY - (5 * barThickness));
-        g2.drawRect(gameWidth / 5 + (8 * barThickness),2 * barThickness, gameWidth / 10, horizBarY - (5 * barThickness));
+
+        Polygon stepButton = new Polygon(
+                new int[] {3 * gameWidth / 10 + (11 * barThickness) - 47,
+                        3 * gameWidth / 10 + (11 * barThickness) + (gameWidth / 30) - 47,
+                        3 * gameWidth / 10 + (11 * barThickness) - 47
+                },
+                new int[] {
+                        3 * barThickness,
+                        (horizBarY - (4 * barThickness) + (3 * barThickness)) / 2,
+                        horizBarY - (4 * barThickness)
+                },
+                3
+        );
 
         Polygon startButton = new Polygon(
             new int[] {3 * gameWidth / 10 + (11 * barThickness),
@@ -73,11 +85,17 @@ public class MenuBar extends UIPanel {
    3
         );
 
-        if(Editor.getStatus() != Status.Stopped) {
-            g2.setColor(new Color(0, 255, 168));
+        g2.setColor(new Color(255, 255, 0));
+        g2.drawLine(319, 2 * barThickness + 2, 319, horizBarY - (2 * barThickness) - 4);
+
+        if(Editor.getStatus() == Status.Running) {
+            g2.setColor(new Color(255, 255, 0));
+            g2.drawPolygon(stepButton);
+
+            g2.setColor(new Color(0, 255, 255));
             g2.fillPolygon(startButton);
 
-            g2.setColor(new Color(255, 32, 64));
+            g2.setColor(new Color(255, 0, 255));
             g2.drawOval(
                     (int)(startButton.getBounds2D().getX() + startButton.getBounds2D().getWidth() + (5 * barThickness)),
                     3 * barThickness,
@@ -85,12 +103,30 @@ public class MenuBar extends UIPanel {
                     horizBarY - (7 * barThickness)
             );
         }
-        else {
-            g2.setColor(new Color(0, 255, 168));
+        else if(Editor.getStatus() == Status.Stopped){
+            g2.setColor(new Color(255, 255, 0));
+            g2.drawPolygon(stepButton);
+
+            g2.setColor(new Color(0, 255, 255));
             g2.drawPolygon(startButton);
 
-            g2.setColor(new Color(255, 32, 64));
+            g2.setColor(new Color(255, 0, 255));
             g2.fillOval(
+                    (int)(startButton.getBounds2D().getX() + startButton.getBounds2D().getWidth() + (5 * barThickness)),
+                    3 * barThickness,
+                    horizBarY - (7 * barThickness),
+                    horizBarY - (7 * barThickness)
+            );
+        }
+        else {
+            g2.setColor(new Color(255, 255, 0));
+            g2.fillPolygon(stepButton);
+
+            g2.setColor(new Color(0, 255, 255));
+            g2.fillPolygon(startButton);
+
+            g2.setColor(new Color(255, 0, 255));
+            g2.drawOval(
                     (int)(startButton.getBounds2D().getX() + startButton.getBounds2D().getWidth() + (5 * barThickness)),
                     3 * barThickness,
                     horizBarY - (7 * barThickness),

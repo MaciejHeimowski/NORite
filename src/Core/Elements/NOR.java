@@ -15,7 +15,7 @@ public class NOR extends Gate {
 
     @Override
     public Color getColor() {
-        return Color.RED;
+        return new Color(200, 0, 50);
     }
 
     @Override

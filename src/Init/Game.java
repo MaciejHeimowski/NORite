@@ -27,6 +27,7 @@ public class Game extends JFrame {
     }
 
     public Game() {
+        super("NORite");
 
         // Set up the game window properties
         this.setSize(width, height);
@@ -58,7 +59,6 @@ public class Game extends JFrame {
                 if(Editor.getStatus() == Editor.Status.Running) {
                     Editor.tick();
                     editor.repaint();
-                    System.out.println("test");
                 }
             }
         };

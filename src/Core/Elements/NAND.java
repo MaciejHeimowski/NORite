@@ -1,25 +1,21 @@
 package Core.Elements;
 
+import Core.Node;
 import UI.Editor;
 
 import java.awt.*;
 
-public class Input extends Gate {
+public class NAND extends Gate {
 
-    private boolean state;
+    private Node inputA, inputB;
 
-    public Input(int x, int y) {
+    public NAND(int x, int y) {
         super(x, y);
     }
 
+    @Override
     public Color getColor() {
-        if(this.state) {
-            return new Color(0, 200, 200);
-        }
-        else
-        {
-            return new Color(0, 64, 128);
-        }
+        return new Color(100, 100, 255);
     }
 
     @Override
@@ -34,29 +30,37 @@ public class Input extends Gate {
         boolean isWireU = tileU instanceof Wire;
         boolean isWireD = tileD instanceof Wire;
 
-        if(isWireU) {
+        if(isWireL && isWireU && isWireR && !isWireD) {
             ((Wire) tileU).getNode().addDriver(this);
+
+            this.inputA = ((Wire) tileL).getNode();
+            this.inputB = ((Wire) tileR).getNode();
         }
-        else if(isWireL) {
+        else if(isWireL && isWireU && !isWireR && isWireD) {
             ((Wire) tileL).getNode().addDriver(this);
+
+            this.inputA = ((Wire) tileU).getNode();
+            this.inputB = ((Wire) tileD).getNode();
         }
-        else if(isWireD) {
+        else if(isWireL && !isWireU && isWireR && isWireD) {
             ((Wire) tileD).getNode().addDriver(this);
+
+            this.inputA = ((Wire) tileL).getNode();
+            this.inputB = ((Wire) tileR).getNode();
         }
-        else if(isWireR) {
+        else if(!isWireL && isWireU && isWireR && isWireD) {
             ((Wire) tileR).getNode().addDriver(this);
+
+            this.inputA = ((Wire) tileU).getNode();
+            this.inputB = ((Wire) tileD).getNode();
         }
         else {
-            // No connections
+            // invalid placement
         }
-    }
-
-    public void flipOutputState() {
-        this.state = !this.state;
     }
 
     @Override
     public boolean getOutputState() {
-        return this.state;
+        return !(this.inputA.getState() && this.inputB.getState());
     }
 }

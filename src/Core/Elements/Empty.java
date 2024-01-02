@@ -8,10 +8,10 @@ public class Empty extends Tile {
     @Override
     public Color getColor() {
         if(even) {
-            return Color.DARK_GRAY;
+            return new Color(40, 40, 40);
         }
         else {
-            return Color.GRAY;
+            return new Color(70, 70, 70);
         }
     }
 
