@@ -3,7 +3,6 @@ package UI;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import Core.Elements.*;
@@ -246,6 +245,14 @@ public class Editor extends UIPanel {
 
     public static void setCurrentTile(Tile tile) {
         currentTile = tile;
+    }
+
+    public static void setMap(Tile[][] newMap) {
+        map = newMap;
+    }
+
+    public static Tile[][] getMap() {
+        return map;
     }
 
     @Override

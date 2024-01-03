@@ -20,10 +20,10 @@ public class Wire extends Tile {
     @Override
     public Color getColor() {
         if(Editor.getStatus() != Editor.Status.Stopped && this.node.getState()) {
-            return Color.CYAN;
+            return new Color(0, 255, 255);
         }
         else {
-            return Color.WHITE;
+            return new Color(200, 200, 200);
         }
     }
 }

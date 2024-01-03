@@ -3,8 +3,14 @@ package UI;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.*;
+import java.nio.file.Path;
 
+import Core.Elements.NAND;
+import Core.Elements.Tile;
 import Init.Game;
+
+import javax.swing.*;
 
 import static UI.Editor.Status;
 
@@ -36,6 +42,53 @@ public class MenuBar extends UIPanel {
                 repaint();
             }
         });
+
+        this.setLayout(null);
+
+        JButton saveButton = new JButton("SAVE");
+        saveButton.setFont(new Font("Lucida Console", Font.PLAIN, 20));
+        saveButton.setFocusPainted(false);
+        saveButton.setBackground(Color.BLACK);
+        saveButton.setForeground(Color.WHITE);
+        saveButton.addActionListener(e -> {
+            try {
+                saveFile();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        saveButton.setBounds(2, 2, 128, 46);
+
+        JButton loadButton = new JButton("LOAD");
+        loadButton.setFont(new Font("Lucida Console", Font.PLAIN, 20));
+        loadButton.setFocusPainted(false);
+        loadButton.setBackground(Color.BLACK);
+        loadButton.setForeground(Color.WHITE);
+        loadButton.addActionListener(e -> {
+            try {
+                loadFile();
+            } catch (IOException | ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        loadButton.setBounds(132, 2, 128, 46);
+
+        this.add(saveButton);
+        this.add(loadButton);
+    }
+
+    public void saveFile() throws IOException {
+        FileOutputStream outputFile = new FileOutputStream("circuit.nrt");
+        ObjectOutputStream objectOutput = new ObjectOutputStream(outputFile);
+        objectOutput.writeObject(Editor.getMap());
+    }
+
+    public void loadFile() throws IOException, ClassNotFoundException {
+        FileInputStream inputFile = new FileInputStream("circuit.nrt");
+        ObjectInputStream objectInput = new ObjectInputStream(inputFile);
+        Editor.setMap((Tile[][]) objectInput.readObject());
+
+        Game.updateSimulationView();
     }
 
     @Override
@@ -55,11 +108,6 @@ public class MenuBar extends UIPanel {
     }
 
     private void paintOptions(Graphics2D g2) {
-        g2.setColor(Color.WHITE);
-
-        g2.drawRect(2 * barThickness, 2 * barThickness, gameWidth / 10, horizBarY - (5 * barThickness));
-        g2.drawRect(gameWidth / 10 + (5 * barThickness),2 * barThickness, gameWidth / 10, horizBarY - (5 * barThickness));
-
         Polygon stepButton = new Polygon(
                 new int[] {3 * gameWidth / 10 + (11 * barThickness) - 47,
                         3 * gameWidth / 10 + (11 * barThickness) + (gameWidth / 30) - 47,

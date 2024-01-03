@@ -9,6 +9,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 public class Game extends JFrame {
 
@@ -26,7 +29,7 @@ public class Game extends JFrame {
         editor.updateView();
     }
 
-    public Game() {
+    public Game() throws IOException, ClassNotFoundException {
         super("NORite");
 
         // Set up the game window properties
@@ -34,7 +37,7 @@ public class Game extends JFrame {
         this.setResizable(false);
         this.getContentPane().setBackground(Color.BLACK);
         this.getContentPane().setLayout(null);
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setUndecorated(false);
         this.setLocation(200, 200);
 
@@ -54,15 +57,25 @@ public class Game extends JFrame {
 
         int delayMillis = 100;
 
-        ActionListener taskPerformer = new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                if(Editor.getStatus() == Editor.Status.Running) {
-                    Editor.tick();
-                    editor.repaint();
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                try {
+                    menuBar.saveFile();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
+            }
+        });
+
+        ActionListener taskPerformer = evt -> {
+            if(Editor.getStatus() == Editor.Status.Running) {
+                Editor.tick();
+                editor.repaint();
             }
         };
 
         new javax.swing.Timer(delayMillis, taskPerformer).start();
+
+        menuBar.loadFile();
     }
 }
