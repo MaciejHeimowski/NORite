@@ -14,12 +14,9 @@ public class Editor extends UIPanel {
     private static final int tileSize = 20;
 
     private static boolean selectionModeEnabled = false;
-
     private static boolean pasteModeEnabled = false;
     private static boolean moveModeEnabled = false;
-
     private static int selectionClickCount = 0;
-
     private int prevXClick, prevYClick;
 
     private static Tile[][] map;
@@ -34,7 +31,7 @@ public class Editor extends UIPanel {
 
     private static Status status = Status.Stopped;
 
-    private static HashSet<Node> netlist = new HashSet<>();
+    private static final HashSet<Node> netlist = new HashSet<>();
 
     public static class Selection {
         private int x1, y1, x2, y2;
@@ -62,7 +59,7 @@ public class Editor extends UIPanel {
             getMapSection();
         }
 
-        public Tile[][] getMapSection() {
+        public void getMapSection() {
             buffer = new Tile[this.y2 - this.y1 + 1][this.x2 - this.x1 + 1];
 
             for(int j = this.y1; j <= this.y2; j++) {
@@ -71,7 +68,6 @@ public class Editor extends UIPanel {
                 }
             }
 
-            return buffer;
         }
 
         public void setMapSectionToSelected(int x, int y) {
@@ -79,24 +75,12 @@ public class Editor extends UIPanel {
                 for(int i = 0; i <= this.x2 - this.x1; i++) {
                     if(!(buffer[j][i] instanceof Empty) && y + j < map.length && x + i < map[0].length)
                         switch(buffer[j][i]) {
-                            case Wire w -> {
-                                map[y + j][x + i] = new Wire();
-                            }
-                            case NAND n -> {
-                                map[y + j][x + i] = new NAND(x + i, y + j);
-                            }
-                            case NOR n -> {
-                                map[y + j][x + i] = new NOR(x + i, y + j);
-                            }
-                            case Bridge b -> {
-                                map[y + j][x + i] = new Bridge(x + i, y + j);
-                            }
-                            case Input in -> {
-                                map[y + j][x + i] = new Input(x + i, y + j);
-                            }
-                            default -> {
-                                map[y + j][x + i] = new Empty(x + i, y + j);
-                            }
+                            case Wire ignored   -> map[y + j][x + i] = new Wire();
+                            case NAND ignored   -> map[y + j][x + i] = new NAND(x + i, y + j);
+                            case NOR ignored    -> map[y + j][x + i] = new NOR(x + i, y + j);
+                            case Bridge ignored -> map[y + j][x + i] = new Bridge(x + i, y + j);
+                            case Input ignored  -> map[y + j][x + i] = new Input(x + i, y + j);
+                            default             -> map[y + j][x + i] = new Empty(x + i, y + j);
                         }
                 }
             }
@@ -215,9 +199,6 @@ public class Editor extends UIPanel {
             moveModeEnabled = false;
             pasteModeEnabled = false;
         }
-        else {
-
-        }
 
         Game.updateSimulationView();
     }
@@ -233,9 +214,7 @@ public class Editor extends UIPanel {
                 prevXClick = tileX;
                 prevYClick = tileY;
             }
-            case 2 -> {
-                selection = new Selection(prevXClick, prevYClick, tileX, tileY);
-            }
+            case 2 -> selection = new Selection(prevXClick, prevYClick, tileX, tileY);
             case 3 -> {
                 prevXClick = tileX;
                 prevYClick = tileY;
@@ -276,24 +255,12 @@ public class Editor extends UIPanel {
             //System.out.println("Place " + tileX + " " + tileY);
 
             switch(currentTile) {
-                case Wire w -> {
-                    currentTile = new Wire();
-                }
-                case NAND n -> {
-                    currentTile = new NAND(tileX, tileY);
-                }
-                case NOR n -> {
-                    currentTile = new NOR(tileX, tileY);
-                }
-                case Bridge b -> {
-                    currentTile = new Bridge(tileX, tileY);
-                }
-                case Input i -> {
-                    currentTile = new Input(tileX, tileY);
-                }
-                default -> {
-                    currentTile = new Empty(tileX, tileY);
-                }
+                case Wire ignored   -> currentTile = new Wire();
+                case NAND ignored   -> currentTile = new NAND(tileX, tileY);
+                case NOR ignored    -> currentTile = new NOR(tileX, tileY);
+                case Bridge ignored -> currentTile = new Bridge(tileX, tileY);
+                case Input ignored  -> currentTile = new Input(tileX, tileY);
+                default             -> currentTile = new Empty(tileX, tileY);
             }
 
             map[tileY][tileX] = currentTile;
@@ -316,8 +283,7 @@ public class Editor extends UIPanel {
 
         for(int i = 0; i < (vertBarX - 2) / tileSize; i++) {
             for(int j = 0; j < ((gameHeight - horizBarY - 2) / tileSize) - 2; j++) {
-                if(map[j][i] instanceof Wire) {
-                    Wire wire = (Wire) map[j][i];
+                if(map[j][i] instanceof Wire wire) {
 
                     if(wire.getNode() == null) {
                         Node newNode = new Node(nodeId);
@@ -335,21 +301,20 @@ public class Editor extends UIPanel {
 
         for(int i = 0; i < (vertBarX - 2) / tileSize; i++) {
             for(int j = 0; j < ((gameHeight - horizBarY - 2) / tileSize) - 2; j++) {
-                if(map[j][i] instanceof Gate) {
-                    Gate gate = (Gate) map[j][i];
+                if(map[j][i] instanceof Gate gate) {
                     gate.attachConnections();
                 }
             }
         }
 
+        /*
         for(Node node : netlist) {
-            //System.out.println("Node " + node.getId() + " is driven by gates at " + node.enumerateDrivers());
+            System.out.println("Node " + node.getId() + " is driven by gates at " + node.enumerateDrivers());
         }
+        */
     }
 
     public static void eraseNetlist() {
-        int nodeId = 0;
-
         for(int i = 1; i < (vertBarX - 2) / tileSize - 1; i++) {
             for(int j = 1; j < ((gameHeight - horizBarY - 2) / tileSize) - 3; j++) {
                 if(map[j][i] instanceof Wire) {
@@ -362,9 +327,7 @@ public class Editor extends UIPanel {
     }
 
     private static void attachNode(int j, int i, Node newNode) {
-        if(map[j][i] instanceof Wire) {
-            Wire wire = (Wire) map[j][i];
-
+        if(map[j][i] instanceof Wire wire) {
             if(wire.getNode() == null) {
                 wire.setNode(newNode);
 
@@ -397,9 +360,6 @@ public class Editor extends UIPanel {
                 }
             }
         }
-        else {
-
-        }
     }
 
     public static void setCurrentTile(Tile tile) {
@@ -420,14 +380,6 @@ public class Editor extends UIPanel {
 
     public static Tile[][] getMap() {
         return map;
-    }
-
-    public void setSelection(int x1, int y1, int x2, int y2) {
-        selection = new Selection(x1, y1, x2, y2);
-    }
-
-    public void clearSelection() {
-        selection = null;
     }
 
     public static void select() {
