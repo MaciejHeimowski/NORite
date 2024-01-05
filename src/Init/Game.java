@@ -1,5 +1,6 @@
 package Init;
 
+import Core.Elements.*;
 import UI.Editor;
 import UI.MenuBar;
 import UI.ToolBar;
@@ -7,10 +8,7 @@ import UI.UIPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.IOException;
 
 public class Game extends JFrame {
@@ -27,6 +25,8 @@ public class Game extends JFrame {
 
     public static void updateSimulationView() {
         editor.updateView();
+        toolBar.repaint();
+        menuBar.repaint();
     }
 
     public Game() throws IOException, ClassNotFoundException {
@@ -48,6 +48,14 @@ public class Game extends JFrame {
         editor = new Editor();
         toolBar = new ToolBar();
 
+        /*
+        menuBar.addKeyListener(UIPanel.keyListener);
+        editor.addKeyListener(UIPanel.keyListener);
+        toolBar.addKeyListener(UIPanel.keyListener);
+        */
+
+        editor.requestFocus();
+
         this.add(menuBar);
         this.add(toolBar);
         this.add(editor);
@@ -60,6 +68,7 @@ public class Game extends JFrame {
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
                 try {
+                    Editor.eraseNetlist();
                     menuBar.saveFile();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -75,6 +84,8 @@ public class Game extends JFrame {
         };
 
         new javax.swing.Timer(delayMillis, taskPerformer).start();
+
+
 
         menuBar.loadFile();
     }

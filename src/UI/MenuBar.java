@@ -4,9 +4,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
-import java.nio.file.Path;
 
-import Core.Elements.NAND;
 import Core.Elements.Tile;
 import Init.Game;
 
@@ -26,19 +24,23 @@ public class MenuBar extends UIPanel {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if(e.getX() > 370 && e.getX() < 410) {
-                    System.out.println("STOP");
+                    //System.out.println("STOP");
                     Editor.stopSimulation();
                 }
                 else if(e.getX() > 328 && e.getX() < 363) {
-                    System.out.println("START");
+                    //System.out.println("START");
                     Editor.startSimulation();
+                    Editor.disableSelectionMode();
+                    Game.updateSimulationView();
                 }
                 else if(e.getX() > 217 && e.getX() < 324) {
-                    System.out.println("STEP");
+                    //System.out.println("STEP");
                     Editor.stepSimulation();
+                    Editor.disableSelectionMode();
+                    Game.updateSimulationView();
                 }
                 Game.updateSimulationView();
-                System.out.println(e.getX() + " " + e.getY());
+                //System.out.println(e.getX() + " " + e.getY());
                 repaint();
             }
         });
@@ -52,6 +54,7 @@ public class MenuBar extends UIPanel {
         saveButton.setForeground(Color.WHITE);
         saveButton.addActionListener(e -> {
             try {
+                Editor.eraseNetlist();
                 saveFile();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);

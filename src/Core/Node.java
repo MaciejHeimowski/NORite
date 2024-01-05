@@ -2,9 +2,10 @@ package Core;
 
 import Core.Elements.Gate;
 
+import java.io.Serializable;
 import java.util.HashSet;
 
-public class Node {
+public class Node implements Serializable {
     private boolean state;
 
     private int id;

@@ -20,10 +20,10 @@ public class NOR extends Gate {
 
     @Override
     public void attachConnections() {
-        Tile tileL = Editor.getTile(this.x - 1, this.y);
-        Tile tileR = Editor.getTile(this.x + 1, this.y);
-        Tile tileU = Editor.getTile(this.x, this.y - 1);
-        Tile tileD = Editor.getTile(this.x, this.y + 1);
+        Tile tileL = this.x - 1 >= 1  ? Editor.getTile(this.x - 1, this.y) : null;
+        Tile tileR = this.x + 1 <= 38 ? Editor.getTile(this.x + 1, this.y) : null;
+        Tile tileU = this.y - 1 >= 1  ? Editor.getTile(this.x, this.y - 1) : null;
+        Tile tileD = this.y + 1 <= 31 ? Editor.getTile(this.x, this.y + 1) : null;
 
         boolean isWireL = tileL instanceof Wire;
         boolean isWireR = tileR instanceof Wire;
