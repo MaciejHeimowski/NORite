@@ -53,11 +53,13 @@ public class MenuBar extends UIPanel {
         saveButton.setBackground(Color.BLACK);
         saveButton.setForeground(Color.WHITE);
         saveButton.addActionListener(e -> {
-            try {
-                Editor.eraseNetlist();
-                saveFile();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+            if(Editor.getStatus() == Status.Stopped) {
+                try {
+                    Editor.eraseNetlist();
+                    saveFile();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
         saveButton.setBounds(2, 2, 128, 46);
@@ -68,10 +70,12 @@ public class MenuBar extends UIPanel {
         loadButton.setBackground(Color.BLACK);
         loadButton.setForeground(Color.WHITE);
         loadButton.addActionListener(e -> {
-            try {
-                loadFile();
-            } catch (IOException | ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
+            if(Editor.getStatus() == Status.Stopped) {
+                try {
+                    loadFile();
+                } catch (IOException | ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
         loadButton.setBounds(132, 2, 128, 46);
