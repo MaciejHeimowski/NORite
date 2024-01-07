@@ -51,6 +51,9 @@ public class Input extends Gate {
         }
     }
 
+    /**
+     * Invert the state of the input
+     */
     public void flipOutputState() {
         this.state = !this.state;
     }

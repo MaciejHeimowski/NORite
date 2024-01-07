@@ -9,35 +9,62 @@ import Core.Elements.*;
 import Core.Node;
 import Init.Game;
 
+/**
+ * Class that represents the schematic editor's window and its functionality
+ */
 public class Editor extends UIPanel {
 
+    // Size of one square tile in pixels
     private static final int tileSize = 20;
 
+    // Flags for the editing tool modes
     private static boolean selectionModeEnabled = false;
     private static boolean pasteModeEnabled = false;
     private static boolean moveModeEnabled = false;
+
+    // Counter that keeps track of which selection corner we're setting
     private static int selectionClickCount = 0;
+
+    // Coords of previous click in selection mode
     private int prevXClick, prevYClick;
 
+    // Main map of tiles
     private static Tile[][] map;
 
+    // Type of tile that's currently selected
     private static Tile currentTile;
 
+    // Simulation status type
     public enum Status {
         Stopped,
         Step,
         Running
     }
 
+    // Simulation status (default Stopped)
     private static Status status = Status.Stopped;
 
+    // Netlist for running the simulation
     private static final HashSet<Node> netlist = new HashSet<>();
 
+    /**
+     * Inner class that represents the selection
+     */
     public static class Selection {
+
+        // Selection corners
         private int x1, y1, x2, y2;
 
+        // Array that contains references to selected area
         private Tile[][] buffer;
 
+        /**
+         * New selection constructor
+         * @param newx1 First corner X coord
+         * @param newy1 FIrst corner Y coord
+         * @param newx2 Second corner X coord
+         * @param newy2 Second corner Y coord
+         */
         public Selection(int newx1, int newy1, int newx2, int newy2) {
             this.x1 = newx1;
             this.y1 = newy1;
@@ -59,6 +86,9 @@ public class Editor extends UIPanel {
             getMapSection();
         }
 
+        /**
+         * Function that returns a reference to selected map area
+         */
         public void getMapSection() {
             buffer = new Tile[this.y2 - this.y1 + 1][this.x2 - this.x1 + 1];
 
@@ -70,6 +100,11 @@ public class Editor extends UIPanel {
 
         }
 
+        /**
+         * Copies the buffer onto the selected area
+         * @param x Upper left corner X coord
+         * @param y Upper left corner Y coord
+         */
         public void setMapSectionToSelected(int x, int y) {
             for(int j = 0; j <= this.y2 - this.y1; j++) {
                 for(int i = 0; i <= this.x2 - this.x1; i++) {
@@ -86,6 +121,9 @@ public class Editor extends UIPanel {
             }
         }
 
+        /**
+         * Removes all tiles in the selected area
+         */
         public void clearSelected() {
             getMapSection();
 
@@ -97,12 +135,16 @@ public class Editor extends UIPanel {
         }
     }
 
+    // Current selection - null if none
     private static Selection selection;
 
     public static Status getStatus() {
         return status;
     }
 
+    /**
+     * Start running the simulation
+     */
     public static void startSimulation() {
         if(status == Status.Stopped)
             createNetlist();
@@ -112,12 +154,18 @@ public class Editor extends UIPanel {
         selection = null;
     }
 
+    /**
+     * Stops the simulation and returns to editing mode
+     */
     public static void stopSimulation() {
         status = Status.Stopped;
 
         eraseNetlist();
     }
 
+    /**
+     * Makes a single step in the simulation
+     */
     public static void stepSimulation() {
         if(status == Status.Stopped)
             createNetlist();
@@ -129,6 +177,9 @@ public class Editor extends UIPanel {
         tick();
     }
 
+    /**
+     * Updates the node states based on gate outputs
+     */
     public static void tick() {
         for(Node node : netlist) {
             node.updateState();
@@ -143,6 +194,9 @@ public class Editor extends UIPanel {
         return map[y][x];
     }
 
+    /**
+     * Editor panel constructor
+     */
     public Editor() {
         super(0, horizBarY, vertBarX, gameHeight - horizBarY);
 
@@ -176,6 +230,10 @@ public class Editor extends UIPanel {
         updateView();
     }
 
+    /**
+     * Mouse click handler for editing tools
+     * @param me AWT MouseEvent variable
+     */
     private void handleEditClick(MouseEvent me) {
         int tileX = ((me.getX() - 10) / tileSize);
         int tileY = ((me.getY() - 10) / tileSize);
@@ -203,6 +261,10 @@ public class Editor extends UIPanel {
         Game.updateSimulationView();
     }
 
+    /**
+     * Mouse click handler for selections
+     * @param me AWT MouseEvent variable
+     */
     private void handleSelectionClick(MouseEvent me) {
         selectionClickCount++;
 
@@ -230,6 +292,10 @@ public class Editor extends UIPanel {
         Game.updateSimulationView();
     }
 
+    /**
+     * Mouse click handler for switching inputs while running
+     * @param me AWT MouseEvent variable
+     */
     private void handleInputTiles(MouseEvent me) {
         int tileX = ((me.getX() - 10) / tileSize);
         int tileY = ((me.getY() - 10) / tileSize);
@@ -247,6 +313,10 @@ public class Editor extends UIPanel {
         updateView();
     }
 
+    /**
+     * Mouse click handler for placing and removing tiles
+     * @param me AWT MouseEvent variable
+     */
     private void handleMouseClick(MouseEvent me) {
         int tileX = ((me.getX() - 10) / tileSize);
         int tileY = ((me.getY() - 10) / tileSize);
@@ -276,6 +346,9 @@ public class Editor extends UIPanel {
         updateView();
     }
 
+    /**
+     * Assigns nodes to all wire tiles to create logical connections
+     */
     public static void createNetlist() {
         int nodeId = 0;
 
@@ -314,6 +387,9 @@ public class Editor extends UIPanel {
         */
     }
 
+    /**
+     * Clears the entire netlist, setting node references in wires to null
+     */
     public static void eraseNetlist() {
         for(int i = 1; i < (vertBarX - 2) / tileSize - 1; i++) {
             for(int j = 1; j < ((gameHeight - horizBarY - 2) / tileSize) - 3; j++) {
@@ -326,6 +402,12 @@ public class Editor extends UIPanel {
         netlist.clear();
     }
 
+    /**
+     * Attaches a node reference to wires, gets called recursively for all neighbouring wire tiles
+     * @param j X coord
+     * @param i Y coord
+     * @param newNode reference to the currently processed node
+     */
     private static void attachNode(int j, int i, Node newNode) {
         if(map[j][i] instanceof Wire wire) {
             if(wire.getNode() == null) {
@@ -362,6 +444,10 @@ public class Editor extends UIPanel {
         }
     }
 
+    /**
+     * Changes the type of tile that's being placed, exits all editing tools
+     * @param tile Tile type to be placed
+     */
     public static void setCurrentTile(Tile tile) {
         currentTile = tile;
 
@@ -382,6 +468,9 @@ public class Editor extends UIPanel {
         return map;
     }
 
+    /**
+     * Enters selection mode
+     */
     public static void select() {
         selectionModeEnabled = !selectionModeEnabled;
 
@@ -395,6 +484,9 @@ public class Editor extends UIPanel {
         }
     }
 
+    /**
+     * Enters copy / paste mode
+     */
     public static void copy() {
         if(selectionModeEnabled)
             pasteModeEnabled = !pasteModeEnabled;
@@ -405,6 +497,9 @@ public class Editor extends UIPanel {
         Game.updateSimulationView();
     }
 
+    /**
+     * Enters move mode
+     */
     public static void move() {
         if(selectionModeEnabled)
             moveModeEnabled = !moveModeEnabled;
@@ -415,6 +510,9 @@ public class Editor extends UIPanel {
         Game.updateSimulationView();
     }
 
+    /**
+     * Enters delete mode
+     */
     public static void delete() {
         if(selection != null && selectionModeEnabled) {
             selection.clearSelected();

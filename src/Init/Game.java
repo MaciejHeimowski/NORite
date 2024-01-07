@@ -23,6 +23,9 @@ public class Game extends JFrame {
     private static Editor editor;
     private static ToolBar toolBar;
 
+    /**
+     * Update all UI panels
+     */
     public static void updateSimulationView() {
         editor.updateView();
         toolBar.repaint();
@@ -84,8 +87,6 @@ public class Game extends JFrame {
         };
 
         new javax.swing.Timer(delayMillis, taskPerformer).start();
-
-
 
         menuBar.loadFile();
     }

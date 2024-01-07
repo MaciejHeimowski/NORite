@@ -13,9 +13,9 @@ import javax.swing.*;
 import static UI.Editor.Status;
 
 public class MenuBar extends UIPanel {
-
-
-
+    /**
+     * MenuBar panel constructor
+     */
     public MenuBar() {
         super(0, 0, gameWidth, horizBarY);
 
@@ -84,12 +84,20 @@ public class MenuBar extends UIPanel {
         this.add(loadButton);
     }
 
+    /**
+     * Serializes the map and places it in a file
+     * @throws IOException
+     */
     public void saveFile() throws IOException {
         FileOutputStream outputFile = new FileOutputStream("circuit.nrt");
         ObjectOutputStream objectOutput = new ObjectOutputStream(outputFile);
         objectOutput.writeObject(Editor.getMap());
     }
 
+    /**
+     * Loads a map from a file and deserializes it
+     * @throws IOException
+     */
     public void loadFile() throws IOException, ClassNotFoundException {
         FileInputStream inputFile = new FileInputStream("circuit.nrt");
         ObjectInputStream objectInput = new ObjectInputStream(inputFile);

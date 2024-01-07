@@ -1,12 +1,11 @@
 package UI;
 
-import Core.Elements.*;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
+/**
+ * Class that represents a panel of the user interface
+ */
 public abstract class UIPanel extends JPanel {
     protected static int gameWidth, gameHeight, horizBarY, vertBarX, barThickness;
 
@@ -40,6 +39,13 @@ public abstract class UIPanel extends JPanel {
         }
     };*/
 
+    /**
+     * UI Panel constructor
+     * @param x Upper left corner X coord
+     * @param y Upper left corner Y coord
+     * @param width Panel width
+     * @param height Panel height
+     */
     public UIPanel(int x, int y, int width, int height) {
         this.setBounds(x, y, width, height);
         this.setBackground(Color.BLACK);

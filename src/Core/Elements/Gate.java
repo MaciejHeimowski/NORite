@@ -17,7 +17,14 @@ public abstract class Gate extends Tile {
         return this.y;
     }
 
+    /**
+     * Scans neighbouring tiles and connects nodes to the gate's inputs and outputs
+     */
     public abstract void attachConnections();
 
+    /**
+     * Returns the output state of the gate based on it's logic function
+     * @return output state
+     */
     public abstract boolean getOutputState();
 }

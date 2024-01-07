@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ToolBar extends UIPanel {
+
+    // References to buttons that can change their color
     private JButton SelectButton, MoveButton, CopyButton;
 
     public ToolBar() {

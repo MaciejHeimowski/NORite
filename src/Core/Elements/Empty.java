@@ -3,6 +3,8 @@ package Core.Elements;
 import java.awt.*;
 
 public class Empty extends Tile {
+
+    // Variable that ensures the empty area will be drawn like a chess board instead of a uniform color
     private boolean even;
 
     @Override
